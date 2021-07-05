@@ -16,7 +16,7 @@ body {
   }
   
   .bg-steel {
-    background: #6633FF;
+    background: #0098fd;
     /* box-shadow: 0 0 6px rgba(0,0,0,0.3); */
   }
   
@@ -56,7 +56,7 @@ body {
   }
   
   a.article-title:hover {
-    color: #1466ff;
+    color: #00aeff;
     text-decoration: none;
   }
   
