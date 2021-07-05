@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
+import django_heroku
 
 # Loading ENV
 env_path = Path('.') / '.env'
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'allauth',
     'allauth.account',
+    'storages'
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
@@ -186,7 +188,9 @@ CHANNEL_LAYERS = {
     },
 }
 
-SITE_ID = 2     # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)
+SITE_ID = 2     
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -206,4 +210,43 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_QUERYSTRING_AUTH = False
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET']
+MEDIA_URL = 'http://%s.s3.amazonaws.com/mediafilecontainer/' % AWS_STORAGE_BUCKET_NAME
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_DEFAULT_ACL = None
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
+
+STATIC_URL = 'http://%s.s3.amazonaws.com/mediafilecontainer/static' % AWS_STORAGE_BUCKET_NAME
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# Allauth
+
+
+LOGIN_REDIRECT_URL = "/"
+# email backend
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "onlinewebsitemarket@gmail.com"
+EMAIL_HOST_PASSWORD = "weckbhyqcfcepjtn"
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'UltraCreation Team <noreply@onlinewebsitemarket.com>'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SERVER_EMAIL = 'ishwarjethwaniillustration@gmail.com'
+
+
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
