@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 import django_heroku
+from .contant import SECRET_KEY
 
 # Loading ENV
 env_path = Path('.') / '.env'
@@ -28,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,12 +40,14 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'crispy_forms',
     'django_cleanup',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
     'django.contrib.contenttypes',
+    'django.contrib.sitemaps',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -52,7 +55,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'allauth',
     'allauth.account',
-    'storages'
+    'storages',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
@@ -63,7 +66,9 @@ INSTALLED_APPS = [
     'channels',
     'friend',
 ]
-
+JAZZMIN_UI_TWEAKS = {
+    "theme": "superhero",
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -163,12 +168,12 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_USER')     # environment variable containing username
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = os.getenv("EMAIL_PORT")
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.getenv('EMAIL_USER')     # environment variable containing username
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
 
 GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 
@@ -216,7 +221,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_QUERYSTRING_AUTH = False
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET']
+AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
 MEDIA_URL = 'http://%s.s3.amazonaws.com/mediafilecontainer/' % AWS_STORAGE_BUCKET_NAME
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_DEFAULT_ACL = None
@@ -224,16 +229,13 @@ AWS_DEFAULT_ACL = None
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = 'http://%s.s3.amazonaws.com/mediafilecontainer/static' % AWS_STORAGE_BUCKET_NAME
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Allauth
 
-
+ADMIN_SITE_HEADER = "UltraChat"
 LOGIN_REDIRECT_URL = "/"
 # email backend
 EMAIL_HOST = 'smtp.gmail.com'

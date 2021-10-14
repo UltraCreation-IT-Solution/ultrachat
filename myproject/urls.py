@@ -19,11 +19,14 @@ from django.urls import path, include
 from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
-
-
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import StaticViewSitemap
+sitemaps = {
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('ultrachatadmin/', admin.site.urls),
 
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
@@ -36,11 +39,13 @@ urlpatterns = [
     
     path('accounts/', include('allauth.urls')),
     
-    path('', include('blog.urls')),
-    path('user/', include('users.urls')),
-    path('notifications/', include('notification.urls')),
-    path('chats/', include('chat.urls')),
-    path('friend/', include('friend.urls', namespace='friend')),
+    path('', include('blog.urls'),name="blog"),
+    path('user/', include('users.urls'),name="user"),
+    path('notifications/', include('notification.urls'),name="notifications"),
+    path('chats/', include('chat.urls'),name="chats"),
+    path('friend/', include('friend.urls', namespace='friend'),name="friend"),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap')
 ]
 
 if settings.DEBUG:
